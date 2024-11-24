@@ -47,6 +47,13 @@ VALIDATE $? "Enabled MYSQL Server..."
 systemctl start mysqld &>> $LOG_FILE
 VALIDATE $? "Started MYSQL Server..."
 
-mysql_secure_installation --set-root-pass ExpenseApp@1 &>> $LOG_FILE
-VALIDATE $? "Setting up Root Password..."
+mysql -h mysql.devopsdragon.fun -u root -pExpenseApp@1 -e "show databases;" &>> $LOG_FILE
+if [ $? -ne 0 ]
+then
+    echo "MYSQL root password is not setup, setting now..." &>> $LOG_FILE
+    mysql_secure_installation --set-root-pass ExpenseApp@1
+    VALIDATE $? "settingup root password..."
+else
+    echo -e "MYSQL root password is already setup...$Y SKIPPING $N" | tee -a $LOG_FILE
+fi
 
