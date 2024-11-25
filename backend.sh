@@ -70,6 +70,25 @@ unzip /tmp/backend.zip &>>LOG_FILE
 VALIDATE $? "Extracting Backend Application code..."
 
 
+npm install &>>LOG_FILE
+cp /home/ec2-user/expense-shell/backend.service /etc/systemd/system/backend.service
+
+#load the data before running backend
+
+dnf install mysql -y
+VALIDATE $? "Installing MYSQL client..."
+
+mysql -h mysql.devopsdragon.fun -uroot -pExpenseApp@1 < /app/schema/backend.sql
+VALIDATE $? "Schema Loading..."
+
+systemctl daemon-reload &>>LOG_FILE
+VALIDATE $? "Deamon re-load..."
+
+systemctl enable backend &>>LOG_FILE
+VALIDATE $? "Enabling backend..."
+
+systemctl restart backend &>>LOG_FILE
+VALIDATE $? "restarted backend..."
 
 
 
