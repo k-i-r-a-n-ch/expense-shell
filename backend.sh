@@ -75,7 +75,7 @@ cp /home/ec2-user/expense-shell/backend.service /etc/systemd/system/backend.serv
 
 #load the data before running backend
 
-dnf install mysql -y
+dnf install mysql -y &>>LOG_FILE
 VALIDATE $? "Installing MYSQL client..."
 
 mysql -h mysql.devopsdragon.fun -uroot -pExpenseApp@1 < /app/schema/backend.sql
